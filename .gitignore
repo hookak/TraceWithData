@@ -1,0 +1,6 @@
+# a comment - this is ignored
+
+ent	# name of a.out file
+*.o	
+*.dat	# name of data file
+
