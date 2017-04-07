@@ -1,4 +1,5 @@
 CC 	= gcc
+CXX	= g++
 CFLAGS	= -Wall -g
 LIBS	= -lm
 TARGET	= ent
@@ -6,17 +7,8 @@ TARGET	= ent
 
 all : $(TARGET)
 
-$(TARGET) : genData.o calEnt.o main.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS) 
-		   
-genData.o : genData.c
-	$(CC) -c $^
-
-calEnt.o : calEnt.c
-	$(CC) -c $^ 
-
-main.o : main.c
-	$(CC) -c $^
+$(TARGET) : main.cpp genData.cpp calEnt.cpp
+	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^
 
 clean :
 	rm -rf *.o $(TARGET)

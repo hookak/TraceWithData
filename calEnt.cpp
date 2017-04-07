@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+
 double calEnt(char* fileName) {
 	double entropy = 0.0;
 	FILE* fp;
@@ -30,13 +31,18 @@ double calEnt(char* fileName) {
 	double temp;
 	for( i=0; i<256; i++) {
 		temp = (double)alphabet[i]/fileSize;
-		entropy -= temp*log2(temp);
+		if(alphabet[i]==0)
+			entropy -= 0;
+		else
+			entropy -= temp*log2(temp);
 
 	}
 
+	/*
 	printf("%s\n",fileName);
 	printf("Entropy = %02.7f bits per byte\n",entropy);
 	printf("Entropy = %02.7f bits per bit\n", entropy/8);
+	*/
 	return entropy;
 
 }
