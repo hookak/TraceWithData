@@ -55,15 +55,15 @@ int main(int argc, char* argv[])
 		//cout << "Input : " << r << " ,Output : " << ret << "\n";
 	}
 
-	if(dist==0) cout << "-UNIFORM DISTRIBUTION-" << endl;
+	if(dist==0) cout << "\t-UNIFORM DISTRIBUTION-" << endl;
 	else if(dist==1) cout << "-NORMAL DISTRIBUTION-" << endl;
-	cout << "\n distribution around " << entropy << "\n";
+	cout << "\n Generate entropy distribution around " << entropy << "\n";
 	for(auto p : num_hist) {
 		std::cout << std::fixed << std::setprecision(2) << std::setw(2)
 			<< p.first << ' ' << string(p.second/50, '*') << '\n';
 	}
 	
-	cout << "\nent distribution around " << entropy << "\n";
+	cout << "\n Calculate entropy distribution around " << entropy << "\n";
 	for(auto p : ent_hist) {
 		std::cout << std::fixed << std::setprecision(2) << std::setw(3)
 			<< p.first << ' ' << string(p.second/50, '*') << '\n';
