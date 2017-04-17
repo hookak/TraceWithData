@@ -44,19 +44,21 @@ int main(int argc, char* argv[])
 		else if(num <0) num = 0;
 		double r = Rounding(num, 2); //rounding
 		num_hist[r]++;
+		double cor = r > 0.98 ? r : r+0.02;
+
 
 		/* generate file */
-		if(genData(fileName,r) !=0) return -1;
+		if(genData(fileName,cor) !=0) return -1;
 		/* caclulate file entropy */
 		ret = calEnt(fileName)/8;
 		ret = Rounding(ret,2);
 		ent_hist[ret]++;
 
-		//cout << "Input : " << r << " ,Output : " << ret << "\n";
+	//	cout << "Input : " << r << " ,Output : " << ret << "\n";
 	}
 
 	if(dist==0) cout << "\t-UNIFORM DISTRIBUTION-" << endl;
-	else if(dist==1) cout << "-NORMAL DISTRIBUTION-" << endl;
+	else if(dist==1) cout << "\t-NORMAL DISTRIBUTION-" << endl;
 	cout << "\n Generate entropy distribution around " << entropy << "\n";
 	for(auto p : num_hist) {
 		std::cout << std::fixed << std::setprecision(2) << std::setw(2)

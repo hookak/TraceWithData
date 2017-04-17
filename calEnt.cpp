@@ -38,6 +38,7 @@ double calEnt(char* fileName) {
 
 	}
 
+	if(entropy==0.00) printf("something wrong\n");
 	/*
 	printf("%s\n",fileName);
 	printf("Entropy = %02.7f bits per byte\n",entropy);

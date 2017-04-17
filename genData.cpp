@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <random>
 
 
 //px Probability of 1
@@ -20,11 +21,15 @@ double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 
 
 
 int genData(char* fileName, double entropy) {
+	
+//	if(entropy <=0.98) entropy += 0.02; // balancing
 	int ent = (int)(entropy*100);
 	int pInt =(int)(px[ent]*10000);
 	int idx = 0;
 	char buf[BUFSIZE];
 	FILE *fp;
+	std::default_random_engine generator;
+	std::uniform_int_distribution<int> distribution(0,10000);
 
 	if((fp = fopen(fileName, "w")) == NULL) {
 		printf("'%s' open error\n", fileName);
@@ -36,7 +41,7 @@ int genData(char* fileName, double entropy) {
 	for(int i=0; i< BUFSIZE; i++) {
 		char bit = 0x01;
 		for(int j=0; j<8; j++) {
-			int n =rand()%10000;
+			int n =distribution(generator);
 			if(n < pInt) {
 				buf[idx] +=bit;
 			}
