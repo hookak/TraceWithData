@@ -1,7 +1,10 @@
+#define PAGE_SIZE 4096
+#define NR_PAGE 1000
 
-#define BUFSIZE 4096
-#define NR_PAGE 10000
+#include <random>
+using namespace std;
 
-int genData(char* fileName, const double entropy);
-double calEnt(char* fileName);
-//double log2(double) { return log(x)/log(2); }
+int genData(unsigned char* buf, const double entropy, uniform_int_distribution<>&, mt19937&);
+double calEnt(unsigned char* buf, double* bufEnt);
+double Rounding(double, int);
+

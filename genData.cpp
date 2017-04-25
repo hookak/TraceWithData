@@ -20,28 +20,20 @@ double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 
 		};
 
 
-int genData(char* fileName, double entropy) {
+int genData(unsigned char* buf, double entropy,uniform_int_distribution<>& dist, mt19937& generator) {
 	
 //	if(entropy <=0.98) entropy += 0.02; // balancing
 	int ent = (int)(entropy*100);
 	int pInt =(int)(px[ent]*10000);
 	int idx = 0;
-	char buf[BUFSIZE];
-	FILE *fp;
-	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(0,10000);
 
-	if((fp = fopen(fileName, "w")) == NULL) {
-		printf("'%s' open error\n", fileName);
-		return -1;
-	}
 
-	memset(buf, 0, BUFSIZE);
+	memset(buf, 0, PAGE_SIZE);
 	idx = 0;
-	for(int i=0; i< BUFSIZE; i++) {
-		char bit = 0x01;
+	for(int i=0; i< PAGE_SIZE; i++) {
+		unsigned char bit = 0x01;
 		for(int j=0; j<8; j++) {
-			int n =distribution(generator);
+			int n =dist(generator);
 			if(n < pInt) {
 				buf[idx] +=bit;
 			}
@@ -49,8 +41,6 @@ int genData(char* fileName, double entropy) {
 		}
 		idx++;
 	}
-	fwrite(buf, 1, BUFSIZE, fp);
-	fclose(fp);
 	//	printf("make '%s', %.2fMiB\n", fileName, (double)BUFSIZE*NR_PAGE/(1024*1024));
 	return 0;
 }
