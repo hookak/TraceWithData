@@ -5,7 +5,10 @@ LIBS	= -lm
 TARGET	= ent
 
 
-all : $(TARGET)
+all : $(TARGET) analyze
+
+analyze : analyze.cpp
+	$(CXX) $(CFLAGS) -o $@ $^
 
 $(TARGET) : main.cpp genData.cpp calEnt.cpp
 	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^
