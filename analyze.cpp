@@ -72,7 +72,10 @@ void analyze_write_req(int offset, int size) {
 		}
 		
 	}
+	total_write_reqs += nr_page;
 }
 
 void analyze_read_req(int offset, int size) {
+	int nr_page = size / 8;
+	total_read_reqs += nr_page;
 }

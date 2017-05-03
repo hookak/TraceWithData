@@ -1,0 +1,30 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CC	Makefile	/^CC 	= gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS	= -Wall -g$/;"	m
+CXX	Makefile	/^CXX	= g++$/;"	m
+LIBS	Makefile	/^LIBS	= -lm$/;"	m
+NR_PAGE	ent.h	2;"	d
+PAGE_SIZE	ent.h	1;"	d
+Rounding	main.cpp	/^double Rounding(double x, int digit) {$/;"	f
+TARGET	Makefile	/^TARGET	= ent$/;"	m
+analyze_read_req	analyze.cpp	/^void analyze_read_req(int offset, int size) {$/;"	f
+analyze_write_req	analyze.cpp	/^void analyze_write_req(int offset, int size) {$/;"	f
+cLeftShift	main.cpp	/^void cLeftShift(unsigned char* s, int len) $/;"	f
+cRightShift	main.cpp	/^void cRightShift(unsigned char* s, int len)$/;"	f
+calEnt	calEnt.cpp	/^double calEnt(unsigned char* d, double* bufEnt) {$/;"	f
+genData	genData.cpp	/^int genData(unsigned char* buf, double entropy,uniform_int_distribution<>& dist, mt19937& generator) {$/;"	f
+init_dupIdx	main.cpp	/^void init_dupIdx(int* dup_idx)	$/;"	f
+main	analyze.cpp	/^int main(int argc, char* argv[]) {$/;"	f
+main	main.cpp	/^int main(int argc, char* argv[])$/;"	f
+nr_update	analyze.cpp	/^	int nr_update;$/;"	m	class:page	file:
+page	analyze.cpp	/^	page() { nr_update = 0;}$/;"	f	class:page
+page	analyze.cpp	/^class page {$/;"	c	file:
+pat	analyze.cpp	/^map<int, page> pat;$/;"	v
+px	genData.cpp	/^double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 0.9901, 0.9886, \/\/0.01 to 0.09$/;"	v
+total_read_reqs	analyze.cpp	/^long long total_read_reqs, total_write_reqs;$/;"	v
+total_write_reqs	analyze.cpp	/^long long total_read_reqs, total_write_reqs;$/;"	v

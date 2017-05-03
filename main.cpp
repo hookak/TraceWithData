@@ -20,22 +20,26 @@ int main(int argc, char* argv[])
 	unsigned char* buf[NR_PAGE];
 	double bufEnt[NR_PAGE];
 	int dup_idx[NR_PAGE];
-	char fileName[100] = "a.dat";
-	FILE *fp;
+	char dataFile[20] = "a.dat";
+	char traceFile[20] = "trace.in";
+	FILE *fp1, *fp2;
 
-	if((fp = fopen(fileName, "w"))==NULL)
+	if((fp1 = fopen(dataFile, "w"))==NULL)
 		return -1;
+	if((fp2 = fopen(traceFile, "w"))==NULL)
+		return -1;
+
 
 	for(int i=0; i<NR_PAGE; i++) 
 		buf[i] = (unsigned char*)malloc(sizeof(unsigned char)*PAGE_SIZE);
 
 	
 	if(argc !=5 ) {
-		printf("Usage :%s entropy P.distribution duplication D.dist\n", argv[0]);
+		printf("Usage :%s Entropy Duplication Page_Distribution Page_Difference\n", argv[0]);
 		return -1;
 	}
 	entropy = strtod(argv[1],0);
-	dist 	= atoi(argv[2]);
+	dist = 1;
 
 
 	srand(time(NULL));
@@ -62,12 +66,10 @@ int main(int argc, char* argv[])
 		if(genData(buf[i], cor,bit_dist,generator) !=0) return -1;
 		/* caclulate file entropy */
 		bufEnt[i]=calEnt(buf[i], bufEnt+i);
-	}
 
-	for(int i=0; i<NR_PAGE; i++) {
 		ent_hist[bufEnt[i]]++;
 	}
-	
+
 	//calculate entropy total page
 	long long data_ch[256] ={0};
 	double dataEnt =0.0;
@@ -97,11 +99,11 @@ int main(int argc, char* argv[])
 
 	//file write
 	for(int i=0; i< NR_PAGE; i++)
-		fwrite(buf[i],1,PAGE_SIZE, fp);
+		fwrite(buf[i],1,PAGE_SIZE, fp1);
 
 	//duplication rate
 
-	double dupRate = strtod(argv[3],0);
+	double dupRate = strtod(argv[2],0);
 	dupRate = Rounding(dupRate,2);
 	int mode = atoi(argv[4]);
 	double per_dup = dupRate/(1-dupRate)*NR_PAGE;
@@ -190,6 +192,7 @@ void init_dupIdx(int* dup_idx)
 		dup_idx[dest] = temp;
 	}
 }
+
 
 void cLeftShift(unsigned char* s, int len) 
 {
