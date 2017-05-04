@@ -17,9 +17,9 @@ class random_box {
 
 	double ent;
 	random_box(double);
-	int number(void);
-	double entropy(int);
-	int index(int);
+	int getNumber(void);
+	double getEntropy(int);
+	int getIndex(int);
 
 
 };
@@ -28,17 +28,14 @@ class data_box {
 	public:
 	unsigned char* buf[NR_PAGE];
 	int dup_idx[NR_PAGE];
-	random_box* rBox;
 
 	data_box(double);
 	
-	int genData(int /*index*/, double entropy);
+	int genData( random_box&, int mode);
 	void init_dupIdx(void);
 	void cLeftShift(int , int);
 	void cRightShift(int, int);
 };
 
-int genData(unsigned char* buf, const double entropy, uniform_int_distribution<>&, mt19937&);
-double calEnt(unsigned char* buf, double* bufEnt);
 double Rounding(double, int);
 
