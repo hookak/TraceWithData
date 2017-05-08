@@ -1,20 +1,18 @@
 
 
 1. Usage
-	./ent [Entropy] [Entropy distribution] [duplication rate] [duplication distribution]
+	./generator [Entropy] [duplication rate] [Page distribution] [Page Difference]
 
-	[Entropy]
-		Entropy value is between 0 and 1
+	[Entropy] <br />
+		Entropy value is between 0 and 1 <br />
 
-	[Entropy distribution]
-		Support two distribution
-		0 : Uniform
-		1 : Normal
-	
-	[duplication rate]
-		rate is between 0 and 1
+	[duplication rate] <br />
+		rate is between 0 and 1 <br />
 
-	[duplication distribution]
-		support two distribution
-		0 : Uniform
-		1 : Normal
+	[Page distribution] <br />
+		support two distribution <br />
+		0 : Uniform <br />
+		1 : Normal <br />
+
+	[Page Difference] <br />
+		Difference is between 0 and 1 <br />
