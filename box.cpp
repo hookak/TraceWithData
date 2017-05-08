@@ -2,6 +2,9 @@
 #include <cstring>
 #include <cmath>
 
+
+mt19937 engine((unsigned int)time(NULL));
+
 double Rounding(double x, int digit) {
 	return (floor((x)*pow(float(10), digit) + 0.5f) / pow(float(10), digit) );
 }
@@ -78,16 +81,14 @@ int data_box::genData(random_box& rBox, int mode) {
 		
 		entInt = (int)(ent*100);
 		pInt = (int)(px[entInt]*10000);
-
+	//	if( rBox.getNumber()%2 == 0 ) pInt = 10000 - pInt;
 
 		dataBuf = this->buf[i];
 		memset(dataBuf, 0, PAGE_SIZE);
-
 		for(int j=0; j< PAGE_SIZE; j++) {
-			if( rBox.getNumber()%2 == 0 ) pInt = 10000 - pInt;
 
 			unsigned char uch = 0x01;
-			for(int shift =0; shif<8; shift++) {
+			for(int shift =0; shift<8; shift++) {
 				n = rBox.getNumber();
 				if(n < pInt) dataBuf[j] += uch;
 
@@ -95,6 +96,8 @@ int data_box::genData(random_box& rBox, int mode) {
 			}
 		}
 	}
+
+	return 1;
 
 }
 
@@ -108,16 +111,16 @@ void data_box::init_dupIdx(void) {
 	}
 }
 
-void data_box::cLeftShift(int idx, int len) {
-	unsigned char* s = buf[idx];
+void data_box::cLeftShift(int idx, int subIdx, int len) {
+	unsigned char* s = buf[idx] + subIdx * (PAGE_SIZE/4);
 	unsigned char temp = s[len - 1];
 	for(int i=0; i < len-1; i++)
 		s[i] = s[i+1];
 	s[len-1] = temp;
 }
 
-void data_box::cRightShift(int idx, int len) {
-	unsigned char* s = buf[idx];
+void data_box::cRightShift(int idx, int subIdx, int len) {
+	unsigned char* s = buf[idx] + subIdx*(PAGE_SIZE/4);
 	unsigned char temp = s[len - 1];
 	for(int i= len-1; i >0; i--)
 		s[i] = s[i-1];

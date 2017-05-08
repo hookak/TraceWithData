@@ -1,6 +1,8 @@
 # a comment - this is ignored
 
-ent
+generator
+analyer
 *.o
 *.dat
 *.txt
+*.in

@@ -2,15 +2,15 @@ CC 	= gcc
 CXX	= g++
 CFLAGS	= -Wall -g
 LIBS	= -lm
-TARGET	= ent
+TARGET	= generator
 
 
-all : $(TARGET) analyze
+all : $(TARGET) analyzer
 
-analyze : analyze.cpp
+analyze : analyzer.cpp
 	$(CXX) $(CFLAGS) -o $@ $^
 
-$(TARGET) : main.cpp genData.cpp calEnt.cpp
+$(TARGET) : generator.cpp box.cpp
 	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^
 
 clean :
