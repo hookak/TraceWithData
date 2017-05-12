@@ -5,10 +5,10 @@ LIBS	= -lm
 TARGET	= generator
 
 
-all : $(TARGET) analyzer
+all : analyzer $(TARGET)  
 
-analyze : analyzer.cpp
-	$(CXX) $(CFLAGS) -o $@ $^
+analyzer : analyzer.cpp page.cpp
+	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^
 
 $(TARGET) : generator.cpp box.cpp
 	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^

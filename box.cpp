@@ -109,6 +109,7 @@ void data_box::init_dupIdx(void) {
 		dup_idx[i] = dup_idx[dest];
 		dup_idx[dest] = temp;
 	}
+
 }
 
 void data_box::cLeftShift(int idx, int subIdx, int len) {

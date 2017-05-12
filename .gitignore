@@ -2,7 +2,9 @@
 
 generator
 analyer
+tags
 *.o
 *.dat
+*.dac
 *.txt
 *.in
