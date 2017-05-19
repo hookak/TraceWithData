@@ -4,7 +4,7 @@ Usage
 1. generator 
 	./generator [File] [Entropy] [duplication rate] [Page distribution] [Page Difference]
 
-	[File]
+	[File] <br />
 		File name that you make
 		
 	[Entropy] <br />
@@ -31,17 +31,17 @@ Usage
 
 File Format
 
-Uint64_t Request type   
+Uint64_t Request type   <br />
 	0 : Read
 	1 : Write
 	
-Uint64_t lpa       
+Uint64_t lpa       <br />
 	Unit : 512B(Sector) 
 	
-Uint64_t size  
+Uint64_t size   <br />
 	Unit : 512B(Sector)
 	
-unsigned char data[PAGE_SIZE]
+unsigned char data[PAGE_SIZE] <br />
 	PAGE_SIZE : 4K
 	
 
