@@ -8,23 +8,54 @@ CC	Makefile	/^CC 	= gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS	= -Wall -g$/;"	m
 CXX	Makefile	/^CXX	= g++$/;"	m
 LIBS	Makefile	/^LIBS	= -lm$/;"	m
-NR_PAGE	ent.h	2;"	d
-PAGE_SIZE	ent.h	1;"	d
+NR_PAGE	box.h	2;"	d
+NR_PAGE	page.h	2;"	d
+N_I_D	box.h	/^		normal_distribution<double>* N_I_D;$/;"	m	class:random_box
+N_R_D	box.h	/^		normal_distribution<double>* N_R_D;$/;"	m	class:random_box
+PAGE_SIZE	box.h	1;"	d
+PAGE_SIZE	page.h	1;"	d
+Rounding	box.cpp	/^double Rounding(double x, int digit) {$/;"	f
 Rounding	main.cpp	/^double Rounding(double x, int digit) {$/;"	f
-TARGET	Makefile	/^TARGET	= ent$/;"	m
-analyze_read_req	analyze.cpp	/^void analyze_read_req(int offset, int size) {$/;"	f
-analyze_write_req	analyze.cpp	/^void analyze_write_req(int offset, int size) {$/;"	f
+TARGET	Makefile	/^TARGET	= generator$/;"	m
+U_I_D	box.h	/^		uniform_int_distribution<int>* U_I_D;$/;"	m	class:random_box
+U_R_D	box.h	/^		uniform_real_distribution<double>* U_R_D;$/;"	m	class:random_box
+analysis	page.cpp	/^void pageTable::analysis() {$/;"	f	class:pageTable
+analyze_read_req	analyzer.cpp	/^void analyze_read_req(int offset, int size) {$/;"	f
+analyze_write_req	analyzer.cpp	/^void analyze_write_req(pageTable& pat, int offset, int size, unsigned char* data) {$/;"	f
+bit	box.h	/^		uniform_int_distribution<int>* bit;$/;"	m	class:random_box
+buf	box.h	/^		unsigned char* buf[NR_PAGE];$/;"	m	class:data_box
+cLeftShift	box.cpp	/^void data_box::cLeftShift(int idx, int subIdx, int len) {$/;"	f	class:data_box
 cLeftShift	main.cpp	/^void cLeftShift(unsigned char* s, int len) $/;"	f
+cRightShift	box.cpp	/^void data_box::cRightShift(int idx, int subIdx, int len) {$/;"	f	class:data_box
 cRightShift	main.cpp	/^void cRightShift(unsigned char* s, int len)$/;"	f
-calEnt	calEnt.cpp	/^double calEnt(unsigned char* d, double* bufEnt) {$/;"	f
-genData	genData.cpp	/^int genData(unsigned char* buf, double entropy,uniform_int_distribution<>& dist, mt19937& generator) {$/;"	f
+calEnt	page.cpp	/^double pageTable::calEnt() {$/;"	f	class:pageTable
+data	page.h	/^	unsigned char data[PAGE_SIZE];$/;"	m	class:pInfo
+data_box	box.cpp	/^data_box::data_box(double e) {$/;"	f	class:data_box
+data_box	box.h	/^class data_box {$/;"	c
+data_ch	page.h	/^	unsigned long long data_ch[256];$/;"	m	class:pageTable
+diff	page.cpp	/^int pageTable::diff(unsigned char* source, unsigned char* dest) {$/;"	f	class:pageTable
+dup_idx	box.h	/^		int dup_idx[NR_PAGE];$/;"	m	class:data_box
+ent	box.h	/^		double ent;$/;"	m	class:random_box
+genData	box.cpp	/^int data_box::genData(random_box& rBox, int mode) {$/;"	f	class:data_box
+getEntropy	box.cpp	/^double random_box::getEntropy(int mode) {$/;"	f	class:random_box
+getIndex	box.cpp	/^int random_box::getIndex(int mode) {$/;"	f	class:random_box
+getNumber	box.cpp	/^int random_box::getNumber(void) {$/;"	f	class:random_box
+init_dupIdx	box.cpp	/^void data_box::init_dupIdx(void) {$/;"	f	class:data_box
 init_dupIdx	main.cpp	/^void init_dupIdx(int* dup_idx)	$/;"	f
-main	analyze.cpp	/^int main(int argc, char* argv[]) {$/;"	f
+main	analyzer.cpp	/^int main(int argc, char* argv[]) {$/;"	f
+main	generator.cpp	/^int main(int argc, char* argv[]) {$/;"	f
 main	main.cpp	/^int main(int argc, char* argv[])$/;"	f
-nr_update	analyze.cpp	/^	int nr_update;$/;"	m	class:page	file:
-page	analyze.cpp	/^	page() { nr_update = 0;}$/;"	f	class:page
-page	analyze.cpp	/^class page {$/;"	c	file:
-pat	analyze.cpp	/^map<int, page> pat;$/;"	v
-px	genData.cpp	/^double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 0.9901, 0.9886, \/\/0.01 to 0.09$/;"	v
-total_read_reqs	analyze.cpp	/^long long total_read_reqs, total_write_reqs;$/;"	v
-total_write_reqs	analyze.cpp	/^long long total_read_reqs, total_write_reqs;$/;"	v
+nr_diff	page.h	/^	unsigned long long nr_diff;$/;"	m	class:pInfo
+nr_update	page.h	/^	unsigned long long nr_update;$/;"	m	class:pInfo
+pInfo	page.cpp	/^pInfo::pInfo() {$/;"	f	class:pInfo
+pInfo	page.h	/^class pInfo {$/;"	c
+pageTable	page.cpp	/^pageTable::pageTable() {$/;"	f	class:pageTable
+pageTable	page.h	/^class pageTable {$/;"	c
+px	box.cpp	/^double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 0.9901, 0.9886, \/\/0.01 to 0.09$/;"	v
+random_box	box.cpp	/^random_box::random_box(double e) {$/;"	f	class:random_box
+random_box	box.h	/^class random_box {$/;"	c
+table	page.h	/^	pInfo* table[NR_PAGE];$/;"	m	class:pageTable
+total_page_diff	page.h	/^	unsigned long long total_page_diff;$/;"	m	class:pageTable
+total_update_reqs	page.h	/^	unsigned long long total_update_reqs;$/;"	m	class:pageTable
+total_write_reqs	page.h	/^	unsigned long long total_write_reqs;$/;"	m	class:pageTable
+update	page.cpp	/^void pageTable::update(int offset, unsigned char* input) {$/;"	f	class:pageTable

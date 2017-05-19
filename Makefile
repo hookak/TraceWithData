@@ -14,5 +14,5 @@ $(TARGET) : generator.cpp box.cpp
 	$(CXX) $(LIBS) $(CFLAGS) -o $@ $^
 
 clean :
-	rm -rf *.o $(TARGET)
-	rm *.dat
+	rm -rf *.o $(TARGET) analyzer
+	rm *.dat *.dac *.in
