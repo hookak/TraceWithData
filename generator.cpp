@@ -47,16 +47,16 @@ int main(int argc, char* argv[]) {
 	lbaFp = fopen("lba.in", "r");
 
 	//	if( (NULL == dataFp || NULL == traceFp )|| NULL == dacFp) return -1;
-	if(argc != 5) {
-		printf("Usage : %s [File] [Entropy] [Page Distribution] [Page Difference]\n", argv[0]);
+	if(argc != 6) {
+		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference]\n", argv[0]);
 		return -1;
 	}
 	if(NULL == dacFp) return -1;
 	if(NULL == lbaFp) return -1;
 
-	entropy = Rounding(atof(argv[2]),2);
-	pageDist = atoi(argv[3]);
-	pageDiff = atof(argv[4]);
+	entropy = Rounding(atof(argv[3]),2);
+	pageDist = atoi(argv[4]);
+	pageDiff = atof(argv[5]);
 	entDist = 1; 
 	if(pageDist == 0) strcpy(pDist, "UNIFORM");
 	else if(pageDist == 1) strcpy(pDist, "NORMAL");
