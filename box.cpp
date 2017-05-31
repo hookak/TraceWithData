@@ -15,7 +15,7 @@ random_box::random_box(double e) {
 	U_R_D = new uniform_real_distribution<double>(ent-0.035, ent+0.035);
 	N_R_D = new normal_distribution<double>(ent, 0.035);
 	U_I_D = new uniform_int_distribution<int>(0, NR_PAGE-1);
-	N_I_D = new normal_distribution<double>(NR_PAGE/2, NR_PAGE/100);
+	N_I_D = new normal_distribution<double>(NR_PAGE/2, NR_PAGE/7);
 	
 }
 
@@ -43,6 +43,9 @@ int random_box::getIndex(int mode) {
 		idx = (*U_I_D)(engine);
 	else if( 1 == mode)
 		idx = (*N_I_D)(engine);
+
+	if(idx < 0) idx =0;
+	else if(idx > NR_PAGE-1) idx = NR_PAGE-1;
 
 	return idx;
 }

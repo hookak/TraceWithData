@@ -57,10 +57,9 @@ int main(int argc, char* argv[]) {
 
 void analyze_write_req(pageTable* pat, ULL offset, ULL size, unsigned char* data) {
 //	printf("analyze_write_req\n");
-	ULL nr_page = size / 8;
-	ULL addr = offset/8;
+	ULL nr_page = size;
+	ULL addr = offset;
 
-	if(offset%8 !=0) printf("Not match 4kb align\n");
 
 	for(ULL loop=0; loop < nr_page; loop++) {
 		ULL lpa = addr + loop;
