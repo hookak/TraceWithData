@@ -1,7 +1,7 @@
 # a comment - this is ignored
 
 generator
-analyer
+analyzer
 tags
 *.o
 *.dat
