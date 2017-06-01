@@ -1,5 +1,6 @@
 # a comment - this is ignored
 
+makeLba
 generator
 analyzer
 tags
@@ -8,3 +9,4 @@ tags
 *.dac
 *.txt
 *.in
+ctags
