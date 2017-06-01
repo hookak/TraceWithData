@@ -11,9 +11,8 @@ clone this project
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
+you will do
 
 ```
 make
@@ -33,19 +32,19 @@ you can use like this
 ## Parameter
 ### Output file format
 
-  request_dir /* read :0 write:1 */       lpa       request_size /* always 1 */      date /* 4096Byte */
+         request_dir          lpa             request_size                  date 
 
- |----------   8 bytes ------------|---8 bytes---|--------- 8 bytes ----------|-------4096 bytes----|
+ |------   8 bytes -----|---8 bytes---|--------- 8 bytes ----------|-------4096 bytes----|
 
 ### entropy
 
 0 < entorpy < 1
 
 ### page distribution
-* 1 - UNIFORM distribution
-* 2 - NORMAL distribution
+* 1 : UNIFORM distribution
+* 2 : NORMAL distribution
 
-###page difference
+### page difference
 
 0 <= page difference <= 1
 
