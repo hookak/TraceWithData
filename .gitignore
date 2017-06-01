@@ -9,4 +9,4 @@ tags
 *.dac
 *.txt
 *.in
-ctags
+tags
