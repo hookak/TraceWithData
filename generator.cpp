@@ -44,15 +44,15 @@ int main(int argc, char* argv[]) {
 //	dataFp = fopen("a.dat", "w");
 //	traceFp = fopen("trace.in", "w");
 	dacFp = fopen(argv[1], "w");
-	lbaFp = fopen("lba.in", "r");
+	lbaFp = fopen(argv[2], "r");
 
 	//	if( (NULL == dataFp || NULL == traceFp )|| NULL == dacFp) return -1;
 	if(argc != 6) {
 		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference]\n", argv[0]);
 		return -1;
 	}
-	if(NULL == dacFp) return -1;
-	if(NULL == lbaFp) return -1;
+	if(NULL == dacFp) {return -1;}
+	if(NULL == lbaFp) {return -1;}
 
 	entropy = Rounding(atof(argv[3]),2);
 	pageDist = atoi(argv[4]);
