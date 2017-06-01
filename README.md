@@ -34,7 +34,7 @@ you can use like this
 
          request_dir          lpa             request_size                  date 
 
- |----------   8 bytes ---------|------8 bytes-----|---------- 8 bytes -----------|----------4096 bytes----------|
+ |-------------- 8 bytes -------------|-------8 bytes------|-------------- 8 bytes ---------------|----------4096 bytes----------|
 
 ### entropy
 
