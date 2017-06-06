@@ -3,6 +3,8 @@
 makeLba
 generator
 analyzer
+blkToLba
+csvToLba
 tags
 *.o
 *.dat
