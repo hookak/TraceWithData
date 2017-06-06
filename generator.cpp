@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	int entDist, pageDist;
 	int  pDiff;
 	char pDist[10];
-	ULL maxLBA=0, total_write_reqs=0;
+	ULL maxLBA=0, total_4K_write_reqs=0;
 
 
 //	dataFp = fopen("a.dat", "w");
@@ -72,16 +72,18 @@ int main(int argc, char* argv[]) {
 
 
 	/* lba.in File read */
-	ULL inputLBA;
+	ULL inputLBA, inputSize, inputOp;
 	ULL pageIdx, idx;
 
 	while(!feof(lbaFp)) {
-		fscanf(lbaFp, "%lld", &inputLBA);
-		if(maxLBA < inputLBA) maxLBA = inputLBA;
-		total_write_reqs++;
+		fscanf(lbaFp, "%lld %lld %lld", &inputOp, &inputLBA, &inputSize);
+		for(ULL i=0; i< inputSize; i++) {
+			if(maxLBA < (inputLBA + i)) maxLBA = (inputLBA+i);
+		}
+		if(inputOp == 1) total_4K_write_reqs += inputSize; //write Request
 	}
 	fseek(lbaFp, 0, SEEK_SET);
-	printf("MaxLBA : %lld, Total Write req :  %lld\n", maxLBA, total_write_reqs);
+	printf("MaxLBA : %lld, Total 4K Write req :  %lld\n", maxLBA, total_4K_write_reqs);
 
 	for(int i=0; i< NR_PAGE; i++) genV.push_back(make_pair(i,0));
 	for(ULL i=0; i<= maxLBA ; i++) {
@@ -89,7 +91,7 @@ int main(int argc, char* argv[]) {
 		matchIdx.push_back(0);
 	}
 	/* make lba sequence */
-	for(ULL i=0; i < total_write_reqs; i++) {
+	for(ULL i=0; i < total_4K_write_reqs; i++) {
 		idx = rBox.getIndex(pageDist);
 		pageIdx = dBox.dup_idx[idx];
 		genV[pageIdx].second++;
@@ -105,8 +107,11 @@ int main(int argc, char* argv[]) {
 	}
 */
 	while(!feof(lbaFp)) {
-		fscanf(lbaFp, "%lld", &inputLBA);
-		inputV[inputLBA].nr_cnt++;
+		fscanf(lbaFp, "%lld %lld %lld",&inputOp, &inputLBA, &inputSize);
+		if(inputOp==1) {
+			for(ULL i=0; i< inputSize; i++)
+				inputV[inputLBA+i].nr_cnt++;
+		}
 	}
 	sort(inputV.begin(), inputV.end(), comp1);
 
@@ -145,23 +150,27 @@ int main(int argc, char* argv[]) {
 	fseek(lbaFp, 0, SEEK_SET);
 	ULL matchLbaToIdx;
 	while(!feof(lbaFp)) {
-		fscanf(lbaFp, "%lld", &inputLBA);
-		matchLbaToIdx = matchIdx[inputLBA];
-		infoLBA& c = inputV[matchLbaToIdx];
+		fscanf(lbaFp, "%lld %lld %lld", &inputOp, &inputLBA, &inputSize);
+		if(inputOp == 0) wInfo(dacFp, 0, inputLBA, inputSize);
+		else if(inputOp == 1) {
+			wInfo(dacFp, 1, inputLBA, inputSize);
+			for(ULL index=0; index < inputSize; index++) {
+				matchLbaToIdx = matchIdx[inputLBA + index];
+				infoLBA& c = inputV[matchLbaToIdx];
 
-		ULL idx = c.seq[c.curSeq].first;
-		if( (--c.seq[c.curSeq].second) ==0)
-			c.curSeq++;
+				ULL idx = c.seq[c.curSeq].first;
+				if( (--c.seq[c.curSeq].second) ==0)
+					c.curSeq++;
 
-		for(int i=0; i < (PAGE_SIZE / 1024); i++) {
-			if(rBox.getNumber() < pDiff) {
-				dBox.cLeftShift(idx, i, (PAGE_SIZE/4));
+				for(int i=0; i < (PAGE_SIZE / 1024); i++) {
+					if(rBox.getNumber() < pDiff) {
+						dBox.cLeftShift(idx, i, (PAGE_SIZE/4));
+					}
+				}
+				fwrite(dBox.buf[idx], 1, PAGE_SIZE, dacFp);
 			}
 		}
 
-		wInfo(dacFp, 1, inputLBA, 1);
-		fwrite(dBox.buf[idx], 1, PAGE_SIZE, dacFp);
-			
 	}
 
 	printf("--File write done--\n");

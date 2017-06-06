@@ -21,11 +21,17 @@ int main(int argc, char* argv[]) {
 				tmps, ops, &offset, &size, tmps);
 
 
-		offset = offset /8;
-		size = size/8;
-		for(unsigned long long i=0; i< size; i++) {
-			fprintf(ofp, "%lld\n", (offset + i));
+		if(ops[0] == 'W') {
+			offset = offset /8;
+			size = size/8;
+			fprintf(ofp, "1 %lld %lld\n", offset, size);
+		}else if(ops[0] == 'R') {
+			offset = offset / 8;
+			size = size /8;
+			fprintf(ofp, "0 %lld %lld\n", offset, size);
+
 		}
+		 
 
 	}
 
