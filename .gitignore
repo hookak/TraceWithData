@@ -5,9 +5,11 @@ generator
 analyzer
 blkToLba
 csvToLba
+verif
 tags
 *.o
 *.dat
 *.dac
 *.txt
 *.in
+*.out
