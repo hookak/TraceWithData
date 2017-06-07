@@ -1,11 +1,11 @@
 #define PAGE_SIZE 4096
-#define NR_PAGE 10000
 
 #include <random>
 #include <ctime>
 #include <functional>
 #include <chrono>
 using namespace std;
+typedef unsigned long long ULL;
 
 
 class random_box {
@@ -17,7 +17,8 @@ class random_box {
 		normal_distribution<double>* N_I_D;
 
 		double ent;
-		random_box(double);
+		ULL NR_PAGE;
+		random_box(double, ULL);
 		int getNumber(void);
 		double getEntropy(int);
 		int getIndex(int);
@@ -27,10 +28,11 @@ class random_box {
 
 class data_box {
 	public:
-		unsigned char* buf[NR_PAGE];
-		int dup_idx[NR_PAGE];
+		unsigned char** buf;
+		int* dup_idx;
+		int NR_PAGE;
 
-		data_box(double);
+		data_box(double, ULL);
 
 		int genData( random_box&, int mode);
 		void init_dupIdx(void);

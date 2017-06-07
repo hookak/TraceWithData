@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 
-typedef unsigned long long ULL;
 void wInfo(FILE*,ULL op, ULL lpa, ULL size);
 
 
@@ -34,11 +33,12 @@ int main(int argc, char* argv[]) {
 	//FILE* dataFp, *traceFp;
 	FILE* dacFp;
 	FILE* lbaFp;
-	double entropy, pageDiff;
+	double entropy, pageDiff, lbaRange;
 	int entDist, pageDist;
 	int  pDiff;
 	char pDist[10];
 	ULL maxLBA=0, total_4K_write_reqs=0;
+	ULL nr_page;
 
 
 //	dataFp = fopen("a.dat", "w");
@@ -47,8 +47,8 @@ int main(int argc, char* argv[]) {
 	lbaFp = fopen(argv[2], "r");
 
 	//	if( (NULL == dataFp || NULL == traceFp )|| NULL == dacFp) return -1;
-	if(argc != 6) {
-		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference]\n", argv[0]);
+	if(argc != 7) {
+		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference] [LBA Range]\n", argv[0]);
 		return -1;
 	}
 	if(NULL == dacFp) {return -1;}
@@ -57,6 +57,7 @@ int main(int argc, char* argv[]) {
 	entropy = Rounding(atof(argv[3]),2);
 	pageDist = atoi(argv[4]);
 	pageDiff = atof(argv[5]);
+	lbaRange = atof(argv[6]);
 	entDist = 1; 
 	if(pageDist == 0) strcpy(pDist, "UNIFORM");
 	else if(pageDist == 1) strcpy(pDist, "NORMAL");
@@ -64,11 +65,6 @@ int main(int argc, char* argv[]) {
 
 	printf("Entropy : %f, Page Distribution : %s, Page Difference : %f\n" \
 			, entropy,pDist, pageDiff);
-
-	random_box rBox(entropy);
-	data_box dBox(entropy);
-	dBox.genData(rBox, entDist);
-
 
 
 	/* lba.in File read */
@@ -83,9 +79,19 @@ int main(int argc, char* argv[]) {
 		if(inputOp == 1) total_4K_write_reqs += inputSize; //write Request
 	}
 	fseek(lbaFp, 0, SEEK_SET);
-	printf("MaxLBA : %lld, Total 4K Write req :  %lld\n", maxLBA, total_4K_write_reqs);
 
-	for(int i=0; i< NR_PAGE; i++) genV.push_back(make_pair(i,0));
+
+	nr_page = (maxLBA * lbaRange);
+
+	printf("MaxLBA : %lld, nr_page : %lld, Total 4K Write req :  %lld\n", maxLBA, nr_page, total_4K_write_reqs);
+	random_box rBox(entropy, nr_page);
+	data_box dBox(entropy, nr_page);
+	dBox.genData(rBox, entDist);
+
+
+
+
+	for(int i=0; i< dBox.NR_PAGE; i++) genV.push_back(make_pair(i,0));
 	for(ULL i=0; i<= maxLBA ; i++) {
 		inputV.push_back(i);
 		matchIdx.push_back(0);
@@ -122,7 +128,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	ULL inIdx=0;
-	for(int i=0; i < NR_PAGE; i++) {
+	for(int i=0; i < dBox.NR_PAGE; i++) {
 		ULL lba = genV[i].first;
 		ULL& cnt = genV[i].second;
 		while(1) {
@@ -149,8 +155,10 @@ int main(int argc, char* argv[]) {
 
 	fseek(lbaFp, 0, SEEK_SET);
 	ULL matchLbaToIdx;
+	int ret1;
 	while(!feof(lbaFp)) {
-		fscanf(lbaFp, "%lld %lld %lld", &inputOp, &inputLBA, &inputSize);
+		ret1 = fscanf(lbaFp, "%lld %lld %lld", &inputOp, &inputLBA, &inputSize);
+		if(ret1 !=3) break;
 		if(inputOp == 0) wInfo(dacFp, 0, inputLBA, inputSize);
 		else if(inputOp == 1) {
 			wInfo(dacFp, 1, inputLBA, inputSize);

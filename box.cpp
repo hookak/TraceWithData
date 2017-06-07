@@ -9,7 +9,8 @@ double Rounding(double x, int digit) {
 	return (floor((x)*pow(float(10), digit) + 0.5f) / pow(float(10), digit) );
 }
 
-random_box::random_box(double e) {
+random_box::random_box(double e, ULL nr_page) {
+	NR_PAGE = nr_page;
 	ent = e;
 	bit = new uniform_int_distribution<int>(0,9999);
 	U_R_D = new uniform_real_distribution<double>(ent-0.035, ent+0.035);
@@ -39,13 +40,14 @@ double random_box::getEntropy(int mode) {
 
 int random_box::getIndex(int mode) {
 	int idx;
+	int nr_page = (int)NR_PAGE;
 	if( 0 == mode)
 		idx = (*U_I_D)(engine);
 	else if( 1 == mode)
 		idx = (*N_I_D)(engine);
 
 	if(idx < 0) idx =0;
-	else if(idx > NR_PAGE-1) idx = NR_PAGE-1;
+	else if(idx > nr_page-1) idx = nr_page-1;
 
 	return idx;
 }
@@ -64,7 +66,10 @@ double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 
 		};
 
 
-data_box::data_box(double e) {
+data_box::data_box(double e, ULL nr_page) {
+	NR_PAGE = nr_page;
+	buf = (unsigned char**)malloc(sizeof(unsigned char*)*NR_PAGE);
+	dup_idx = (int*)malloc(sizeof(int)*NR_PAGE);
 
 	for(int i=0; i< NR_PAGE; i++)
 		buf[i] = (unsigned char*)malloc(sizeof(unsigned char)*PAGE_SIZE);

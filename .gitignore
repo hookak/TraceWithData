@@ -2,6 +2,7 @@
 
 makeLba
 generator
+verif.cpp
 analyzer
 blkToLba
 csvToLba
