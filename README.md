@@ -21,7 +21,7 @@ make
 then 'generator' excutable file 
 
 ```
-./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference]
+./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference] [LBA range]
 ```
 
 you can use like this
