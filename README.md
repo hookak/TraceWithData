@@ -21,7 +21,7 @@ make
 then 'generator' excutable file 
 
 ```
-./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference] [LBA range]
+./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference] [LBA range] [RW mode]
 ```
 
 you can use like this
@@ -34,7 +34,7 @@ you can use like this
 
          request_dir          lpa             request_size                  date 
 
- |-------------- 8 bytes -------------|-------8 bytes------|-------------- 8 bytes ---------------|----------4096 bytes----------|
+ |-------------- 8 bytes -------------|-------8 bytes------|-------------- 8 bytes ---------------|----------(request_size* 4096) bytes----------|
 
 ### entropy
 
@@ -49,4 +49,16 @@ you can use like this
 0 <= page difference <= 1
 
 page difference is possibility of 1K block change
+
+### LBA range
+
+0 <= LBA range
+
+if Input LBA range [100G], and LBA range = 0.5,
+   generated LBA range is [100G * 0.5] = [50G]
+
+### RW mode
+   * 0 : RW
+   * 1 : W
+
 
