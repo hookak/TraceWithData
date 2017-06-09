@@ -18,7 +18,15 @@ you will do
 make
 ```
 
-then 'generator' excutable file 
+then 'generator', 'csvToLba', 'blkToLba' excutable file 
+
+
+'csvToLba' make csv file to lba input File
+Download MSR Cambridge Traces http://iotta.snia.org/tracetypes/3
+
+```
+./csvToLba hm_0.csv hm_0_lba.in
+```
 
 ```
 ./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference] [LBA range] [RW mode]
@@ -26,7 +34,7 @@ then 'generator' excutable file
 
 you can use like this
 ```
-./generator output.dac lba.in 0.59 1 0.3
+./generator output.dac hm_0_lba.in 0.59 1 0.3 0.5 0
 ```
 
 ## Parameter
