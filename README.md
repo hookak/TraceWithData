@@ -18,16 +18,19 @@ you will do
 make
 ```
 
-then 'generator', 'csvToLba', 'blkToLba' excutable file 
+generate 'generator', 'csvToLba', 'blkToLba' excutable file 
 
 
-'csvToLba' make csv file to lba input File
+First, 'csvToLba' make csv file to lba input File
+
 Download MSR Cambridge Traces http://iotta.snia.org/tracetypes/3
 
 ```
 ./csvToLba hm_0.csv hm_0_lba.in
 ```
 
+
+and hm_0_lba.in File will used input file of 'generator' 2nd parameter
 ```
 ./generator [Output file] [LBA sequence file] [entropy] [page distribution] [page difference] [LBA range] [RW mode]
 ```
