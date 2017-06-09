@@ -10,33 +10,39 @@ void wInfo(FILE*,ULL op, ULL lpa, ULL size);
 
 class infoLBA {
 	public:
-	ULL lba, nr_cnt, curSeq, totalSeq;
+	ULL lba, w_cnt,r_cnt, curSeq, totalSeq;
+	ULL compLba;
 	vector<pair<ULL,ULL>> seq;
 
 	infoLBA(ULL l) {
 		lba = l;
-		nr_cnt=0;
+		w_cnt=0;
+		r_cnt=0;
 		curSeq=0;
 		totalSeq = 0;
+		compLba = -1;
 	}
 };
 
 
 bool comp(const pair<ULL,ULL> a, const pair<ULL,ULL> b) { return a.second > b.second;}
-bool comp1(const infoLBA a, infoLBA b) {return a.nr_cnt > b.nr_cnt;}
+bool comp1(const infoLBA a, infoLBA b) {return a.w_cnt > b.w_cnt;}
 
 vector<pair<ULL,ULL>> genV;
+vector<infoLBA> tempV;
 vector<infoLBA> inputV;
 vector<ULL> matchIdx;
+vector<ULL> sortedIdx;
 
 int main(int argc, char* argv[]) {
 	//FILE* dataFp, *traceFp;
 	FILE* dacFp;
 	FILE* lbaFp;
 	double entropy, pageDiff, lbaRange;
-	int entDist, pageDist;
+	int entDist, pageDist, RW;
 	int  pDiff;
 	char pDist[10];
+	char rwMode[10];
 	ULL maxLBA=0, total_4K_write_reqs=0;
 	ULL nr_page;
 
@@ -47,8 +53,8 @@ int main(int argc, char* argv[]) {
 	lbaFp = fopen(argv[2], "r");
 
 	//	if( (NULL == dataFp || NULL == traceFp )|| NULL == dacFp) return -1;
-	if(argc != 7) {
-		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference] [LBA Range]\n", argv[0]);
+	if(argc != 8) {
+		printf("Usage : %s [Output File] [LBA File] [Entropy] [Page Distribution] [Page Difference] [LBA Range] [RW Mode]\n", argv[0]);
 		return -1;
 	}
 	if(NULL == dacFp) {return -1;}
@@ -58,13 +64,18 @@ int main(int argc, char* argv[]) {
 	pageDist = atoi(argv[4]);
 	pageDiff = atof(argv[5]);
 	lbaRange = atof(argv[6]);
+	RW = atoi(argv[7]);
+
 	entDist = 1; 
 	if(pageDist == 0) strcpy(pDist, "UNIFORM");
 	else if(pageDist == 1) strcpy(pDist, "NORMAL");
+
+	if(RW == 0) strcpy(rwMode, "RW");
+	else if(RW == 1) strcpy(rwMode, "W");
 	pDiff = pageDiff*10000;
 
-	printf("Entropy : %f, Page Distribution : %s, Page Difference : %f\n" \
-			, entropy,pDist, pageDiff);
+	printf("Entropy : %.3f, Page Distribution : %s, Page Difference : %.3f, LBA Range : %.3f, MODE : %s\n" \
+			, entropy,pDist, pageDiff, lbaRange, rwMode);
 
 
 	/* lba.in File read */
@@ -77,25 +88,60 @@ int main(int argc, char* argv[]) {
 			if(maxLBA < (inputLBA + i)) maxLBA = (inputLBA+i);
 		}
 		if(inputOp == 1) total_4K_write_reqs += inputSize; //write Request
+		//printf("%lld %lld %lld %lld\n", inputOp, inputLBA, inputSize, total_4K_write_reqs);
 	}
 	fseek(lbaFp, 0, SEEK_SET);
 
+	
+	printf("MaxLBA : %lld [%.2f G], Total 4K Write req :  %lld [%.2f G]\n" \
+			, maxLBA, (double)maxLBA*4096/1024/1024/1024, total_4K_write_reqs, (double)total_4K_write_reqs*4096/1024/1024/1024);
+	
+	for(ULL i=0; i<= maxLBA ; i++) {
+		tempV.push_back(i);
+		matchIdx.push_back(0);
+		sortedIdx.push_back(0);
+	}
 
-	nr_page = (maxLBA * lbaRange);
+	while(!feof(lbaFp)) {
+		fscanf(lbaFp, "%lld %lld %lld",&inputOp, &inputLBA, &inputSize);
+		if(inputOp==1) {
+			for(ULL i=0; i< inputSize; i++)
+				tempV[inputLBA+i].w_cnt++;
+		} else if(inputOp == 0) {
+			for(ULL i=0; i< inputSize; i++)
+				tempV[inputLBA+i].r_cnt++;
+		}
+	}
 
-	printf("MaxLBA : %lld, nr_page : %lld, Total 4K Write req :  %lld\n", maxLBA, nr_page, total_4K_write_reqs);
+
+	/*LBA compression */
+	ULL compMax=0;
+	for(ULL i=0; i <= maxLBA; i++) {
+		if(tempV[i].w_cnt !=0 || tempV[i].r_cnt != 0) {
+			inputV.push_back(i);
+			inputV[compMax].compLba = compMax;
+			inputV[compMax].w_cnt = tempV[i].w_cnt;
+			inputV[compMax].r_cnt = tempV[i].r_cnt;
+			compMax++;
+		}
+	}
+	tempV.clear();
+
+	nr_page = (compMax * lbaRange);
+
+	printf("CompLBA : %lld [%.2f G],   GeneratedLBA : %lld [%.2f G]\n"\
+			, compMax-1, ((double)(compMax-1)*4096 / 1024 / 1024 / 1024), nr_page, (double)nr_page*4096/1024/1024/1024);
+
 	random_box rBox(entropy, nr_page);
 	data_box dBox(entropy, nr_page);
 	dBox.genData(rBox, entDist);
 
+	printf("Data Initialized\n");
 
 
+	for(ULL i=0; i< dBox.NR_PAGE; i++) genV.push_back(make_pair(i,0));
 
-	for(int i=0; i< dBox.NR_PAGE; i++) genV.push_back(make_pair(i,0));
-	for(ULL i=0; i<= maxLBA ; i++) {
-		inputV.push_back(i);
-		matchIdx.push_back(0);
-	}
+
 	/* make lba sequence */
 	for(ULL i=0; i < total_4K_write_reqs; i++) {
 		idx = rBox.getIndex(pageDist);
@@ -104,47 +150,49 @@ int main(int argc, char* argv[]) {
 	}
 
 	//int middle = dBox.dup_idx[NR_PAGE/2];
-
-	sort(genV.begin(), genV.end(), comp);
-
 	/*
-	for(int i=0; i< NR_PAGE; i++) {
-		printf("%lld %lld\n", genV[i].first, genV[i].second);
-	}
-*/
-	while(!feof(lbaFp)) {
-		fscanf(lbaFp, "%lld %lld %lld",&inputOp, &inputLBA, &inputSize);
-		if(inputOp==1) {
-			for(ULL i=0; i< inputSize; i++)
-				inputV[inputLBA+i].nr_cnt++;
-		}
-	}
-	sort(inputV.begin(), inputV.end(), comp1);
-
+	   for(int i=0; i< NR_PAGE; i++) {
+	   printf("%lld %lld\n", genV[i].first, genV[i].second);
+	   }
+	 */
 	/* matchIdx */
-	for(ULL i=0; i < maxLBA; i++) {
+	for(ULL i=0; i < inputV.size(); i++) {
 		ULL lba = inputV[i].lba;
 		matchIdx[lba] = i;
 	}
 
+	printf("MatchIdx done\n");
+
+	sort(inputV.begin(), inputV.end(), comp1);
+	sort(genV.begin(), genV.end(), comp);
+
+	for(ULL i=0; i < inputV.size(); i++) {
+		ULL lba = inputV[i].lba;
+		sortedIdx[lba] = i;
+	}
+	
+
+
+	/* sequence ordering */
 	ULL inIdx=0;
-	for(int i=0; i < dBox.NR_PAGE; i++) {
+	for(ULL i=0; i < dBox.NR_PAGE; i++) {
 		ULL lba = genV[i].first;
 		ULL& cnt = genV[i].second;
 		while(1) {
-			ULL nr_cnt = inputV[inIdx].nr_cnt;
-			if( nr_cnt  <= cnt) {
+	//		printf("inIdx : %lld\n", inIdx);
+			ULL w_cnt = inputV[inIdx].w_cnt;
+			if( w_cnt  <= cnt) {
 
-				inputV[inIdx].seq.push_back(make_pair(lba, nr_cnt));
-				inputV[inIdx].nr_cnt = 0;
+				inputV[inIdx].seq.push_back(make_pair(lba, w_cnt));
+				inputV[inIdx].w_cnt = 0;
 				inputV[inIdx].totalSeq++;
-				cnt -= nr_cnt;
-			//	printf("lba : %lld, Cnt : %lld\n",lba, cnt);
+				cnt -= w_cnt;
+				//	printf("lba : %lld, Cnt : %lld\n",lba, cnt);
 				inIdx++;
 				if(cnt ==0) break;
 			} else {
 				inputV[inIdx].seq.push_back(make_pair(lba, cnt));
-				inputV[inIdx].nr_cnt -= cnt;
+				inputV[inIdx].w_cnt -= cnt;
 				inputV[inIdx].totalSeq++;
 				cnt = 0;
 				break;
@@ -159,11 +207,14 @@ int main(int argc, char* argv[]) {
 	while(!feof(lbaFp)) {
 		ret1 = fscanf(lbaFp, "%lld %lld %lld", &inputOp, &inputLBA, &inputSize);
 		if(ret1 !=3) break;
-		if(inputOp == 0) wInfo(dacFp, 0, inputLBA, inputSize);
-		else if(inputOp == 1) {
-			wInfo(dacFp, 1, inputLBA, inputSize);
+
+		ULL sortedIndex = sortedIdx[inputLBA];
+		ULL compLBA = inputV[sortedIndex].compLba;
+		if(inputOp == 0 && RW == 0) wInfo(dacFp, 0,compLBA , inputSize);
+		if(inputOp == 1) {
+			wInfo(dacFp, 1, compLBA, inputSize);
 			for(ULL index=0; index < inputSize; index++) {
-				matchLbaToIdx = matchIdx[inputLBA + index];
+				matchLbaToIdx = sortedIdx[inputLBA + index];
 				infoLBA& c = inputV[matchLbaToIdx];
 
 				ULL idx = c.seq[c.curSeq].first;

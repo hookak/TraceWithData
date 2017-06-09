@@ -69,9 +69,9 @@ double px[] = { 1.0000, 0.9991, 0.9980, 0.9969, 0.9957, 0.9944, 0.9930, 0.9916, 
 data_box::data_box(double e, ULL nr_page) {
 	NR_PAGE = nr_page;
 	buf = (unsigned char**)malloc(sizeof(unsigned char*)*NR_PAGE);
-	dup_idx = (int*)malloc(sizeof(int)*NR_PAGE);
+	dup_idx = (ULL*)malloc(sizeof(ULL)*NR_PAGE);
 
-	for(int i=0; i< NR_PAGE; i++)
+	for(ULL i=0; i< NR_PAGE; i++)
 		buf[i] = (unsigned char*)malloc(sizeof(unsigned char)*PAGE_SIZE);
 
 	init_dupIdx();
@@ -83,7 +83,8 @@ int data_box::genData(random_box& rBox, int mode) {
 	double ent;
 	int entInt, pInt, n;
 	unsigned char* dataBuf;
-	for(int i=0; i< NR_PAGE; i++) {
+	for(ULL i=0; i< NR_PAGE; i++) {
+		//printf(" idx : %lld\n",i);
 		ent = rBox.getEntropy(mode);
 		ent = Rounding(ent,2);
 		
@@ -110,8 +111,8 @@ int data_box::genData(random_box& rBox, int mode) {
 }
 
 void data_box::init_dupIdx(void) {
-	for(int i=0; i< NR_PAGE; i++) dup_idx[i] = i;
-	for(int i=0; i< NR_PAGE; i++) {
+	for(ULL i=0; i< NR_PAGE; i++) dup_idx[i] = i;
+	for(ULL i=0; i< NR_PAGE; i++) {
 		int dest = rand() % NR_PAGE;
 		int temp = dup_idx[i];
 		dup_idx[i] = dup_idx[dest];

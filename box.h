@@ -29,8 +29,8 @@ class random_box {
 class data_box {
 	public:
 		unsigned char** buf;
-		int* dup_idx;
-		int NR_PAGE;
+		ULL* dup_idx;
+		ULL NR_PAGE;
 
 		data_box(double, ULL);
 
