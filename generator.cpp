@@ -38,9 +38,9 @@ int main(int argc, char* argv[]) {
 	//FILE* dataFp, *traceFp;
 	FILE* dacFp;
 	FILE* lbaFp;
-	double entropy, pageDiff, lbaRange;
+	double entropy, pageDiff;
 	int entDist, pageDist, RW;
-	int  pDiff;
+	int  pDiff,lbaRange;
 	char pDist[10];
 	char rwMode[10];
 	ULL maxLBA=0, total_4K_write_reqs=0;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	entropy = Rounding(atof(argv[3]),2);
 	pageDist = atoi(argv[4]);
 	pageDiff = atof(argv[5]);
-	lbaRange = atof(argv[6]);
+	lbaRange = atoi(argv[6]);
 	RW = atoi(argv[7]);
 
 	entDist = 1; 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 	else if(RW == 1) strcpy(rwMode, "W");
 	pDiff = pageDiff*10000;
 
-	printf("Entropy : %.3f, Page Distribution : %s, Page Difference : %.3f, LBA Range : %.3f, MODE : %s\n" \
+	printf("Entropy : %.3f, Page Distribution : %s, Page Difference : %.3f, LBA Range : %d, MODE : %s\n" \
 			, entropy,pDist, pageDiff, lbaRange, rwMode);
 
 
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 	}
 	tempV.clear();
 
-	nr_page = (compMax * lbaRange);
+	nr_page = lbaRange;
 
 	printf("CompLBA : %lld [%.2f G],   GeneratedLBA : %lld [%.2f G]\n"\
 			, compMax-1, ((double)(compMax-1)*4096 / 1024 / 1024 / 1024), nr_page, (double)nr_page*4096/1024/1024/1024);
